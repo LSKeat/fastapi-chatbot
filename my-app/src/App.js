@@ -2,6 +2,8 @@ import React, { useState, useEffect, useRef } from 'react';
 import ReactMarkdown from 'react-markdown';
 import './App.css';
 
+const API_URL = process.env.REACT_APP_API_URL || "http://localhost:8000";
+
 const SendIcon = () => (
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="send-icon">
     <path d="m22 2-7 20-4-9-9-4Z"/>
@@ -105,7 +107,7 @@ function App() {
     setIsLoading(true);
 
     try {
-      const response = await fetch(`http://localhost:8000/chat?input=${encodeURIComponent(input)}&session_id=${sessionId}`);
+      const response = await fetch(`${API_URL}/chat?input=${encodeURIComponent(input)}&session_id=${sessionId}`);
       if (!response.body) return;
 
       const botMessage = { type: 'bot', content: '', timestamp: new Date().toISOString() };

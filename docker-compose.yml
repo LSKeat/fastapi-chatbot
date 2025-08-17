@@ -1,0 +1,60 @@
+services:
+  frontend:
+    image: my-app
+    container_name: frontend
+    ports:
+      - "3000:80"
+    environment:
+      REACT_APP_API_URL: http://server:8000
+    depends_on:
+      server:
+        condition: service_healthy
+    networks:
+      - mynetwork
+
+  server:
+    image: server
+    container_name: server
+    ports:
+      - "8000:8000"
+    environment:
+      SQL_DATABASE_URL: mysql+aiomysql://myuser:123@db:3306/mydb
+    depends_on:
+      db:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/"] 
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    networks:
+      - mynetwork
+
+  db:
+    image: mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpass
+      MYSQL_DATABASE: mydb
+      MYSQL_USER: myuser
+      MYSQL_PASSWORD: 123
+    ports:
+      - "3306:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "myuser", "-p123"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    networks:
+      - mynetwork
+
+volumes:
+  db_data:
+
+networks:
+  mynetwork:
+    driver: bridge
