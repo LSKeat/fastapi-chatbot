@@ -18,7 +18,8 @@ services:
     ports:
       - "8000:8000"
     environment:
-      SQL_DATABASE_URL: mysql+aiomysql://myuser:123@db:3306/mydb
+      - SQL_DATABASE_URL=mysql+aiomysql://myuser:123@db:3306/mydb
+      - PYTHONUNBUFFERED=1
     depends_on:
       db:
         condition: service_healthy

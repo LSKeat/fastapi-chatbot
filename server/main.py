@@ -75,7 +75,8 @@ async def read_chat(input: str, session_id: str = Query("default")):
                 
                 async for chunk in generate_response(input, chat_history[:-1]):
                     full_response += chunk
-                    yield chunk
+                    yield f"{chunk}"
+                    await asyncio.sleep(0.01)
                 
                 chat_history.append(AIMessage(content=full_response))
 
@@ -99,7 +100,19 @@ async def read_chat(input: str, session_id: str = Query("default")):
                 except Exception as e:
                     logger.error(f"Error saving to database: {e}")
 
-            return StreamingResponse(event_stream(), media_type="text/plain")
+            return StreamingResponse(
+                event_stream(), 
+                media_type="text/plain",
+                headers={
+                    "Cache-Control": "no-cache, no-store, must-revalidate",
+                    "Pragma": "no-cache",
+                    "Expires": "0",
+                    "Connection": "keep-alive",
+                    "X-Accel-Buffering": "no",
+                    "Transfer-Encoding": "chunked",
+                    "Content-Type": "text/plain; charset=utf-8"
+                }
+            )
     
     except Exception as e:
         logger.error(f"Error in chat endpoint: {e}")
