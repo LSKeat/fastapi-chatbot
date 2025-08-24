@@ -32,8 +32,7 @@ A modern, real-time chat interface for Large Language Models with streaming resp
    * MySQL Database integration
    * Local LLM
 
-3. **Database (SQLite)**
-
+3. **Database (MySQL)
    * Chat session persistence
    * Message history storage
    * Async operations
