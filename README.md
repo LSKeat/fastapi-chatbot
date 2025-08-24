@@ -194,9 +194,7 @@ docker run -p 3000:80 llm-chat-frontend
 
 | Method | Endpoint | Description |
 |--------|----------|-------------|
-| `GET` | `/` | Health check and welcome message |
 | `GET` | `/health` | System health status |
-| `POST` | `/chat/stream` | Stream chat responses (SSE) |
 | `GET` | `/chat/history/{session_id}` | Get chat history for session |
 | `DELETE` | `/chat/history/{session_id}` | Delete chat session |
 
